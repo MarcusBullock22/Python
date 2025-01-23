@@ -15,9 +15,10 @@ async def on_message(message):
     global last_image_path  # Access the last_image_path variable
 
     if not message.author.bot:
-        pattern1 = r"(?i)(?<!\S)(?!MeowFemBoy\b)(?:[-*_])?m(?:[-*_])?(?:\w(?:[-*_]))?e(?:[-*_])?(?:\w(?:[-*_]))?o(?:[-*_])?(?:\w(?:[-*_]))?w(?:[-*_])?\w*"
-        pattern2 = r"(?i)\bMeowFemboy\b"
+        pattern1 = r"(?i)\bMeow\b"
+        pattern2 = r"(?i)\bFemboy\b"
 
+    #Standard
         if re.search(pattern1, message.content):
             if "bot" in message.channel.name.lower():
                 folder_path = "/DiscordBots/Images/CatGirls"
@@ -34,7 +35,24 @@ async def on_message(message):
                         print("Last image path:", last_image_path)
                 else:
                     await message.channel.send("No images found.")
-    
+  
+    #With Dicks
+        if re.search(pattern2, message.content):
+            if "bot" in message.channel.name.lower():
+                folder_path = "/DiscordBots/Images/FemBoy"
+                file_names = os.listdir(folder_path)
+                image_paths = [
+                    os.path.join(folder_path, file_name) for file_name in file_names
+                ]
+                if image_paths:
+                    random_image_path = random.choice(image_paths)
+                    with open(random_image_path, "rb") as image_file:
+                        image = discord.File(image_file)
+                        await message.channel.send(file=image)
+                        last_image_path = random_image_path  # Store the path of the last image sent
+                        print("Last image path:", last_image_path)
+                else:
+                    await message.channel.send("No images found.")       
     await bot.process_commands(message)
 
 @bot.command(name='killkitty')
