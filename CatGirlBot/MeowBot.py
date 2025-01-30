@@ -28,7 +28,6 @@ async def on_message(message):
         pattern1 = r"(?i)\bMeow\b"
         pattern2 = r"(?i)\bFemboy\b"
         pattern3 = r"(?i)\bUwu\b"
-        pattern4 = r"(?i)\bdipshitdev\b"
 
     #Standard
         if re.search(pattern1, message.content):
