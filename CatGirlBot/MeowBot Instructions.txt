@@ -3,5 +3,4 @@ Meow bot, our personal project me and a group of buddies thought would be fun to
 Commands:
 Meow - this will post a cat girl
 Femboy - This will post a cat femboy
-/killkitty - this will remove the most recently posted image
 Uwu - This command will post a random image of crowd sourced ff14 characters
