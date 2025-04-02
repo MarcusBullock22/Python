@@ -26,7 +26,7 @@ async def on_message(message):
 
     if not message.author.bot:
         pattern1 = r"(?i)\bMeow\b"
-        pattern2 = r"(?i)\bFemboy\b"
+        pattern2 = r"(?i)\bMeowMale\b"
         pattern3 = r"(?i)\bUwu\b"
 
     #Standard
@@ -43,7 +43,7 @@ async def on_message(message):
                 else:
                     await message.channel.send("No images found.")
   
-    #With Dicks
+    #MaleCats
         if re.search(pattern2, message.content):
             if "bot" in message.channel.name.lower():
                 image_paths = []
@@ -57,7 +57,7 @@ async def on_message(message):
                 else:
                     await message.channel.send("No images found.")
     
-    #Ff Degens   
+    #FinalFantasyPics  
         if re.search(pattern3, message.content):
             if "bot" in message.channel.name.lower():
                 image_paths = []
