@@ -1,0 +1,12 @@
+The purpose of this program was to solve a couple of issues:
+1. Find a solution within Python that will allow for auto emailing in a confined system space
+2. Remedy restricted access to outlook via signin
+
+To run this program, you must have outlook up. You will also need an excel file or whatever file/link you 
+may want to use. Verify an updated date column is also present for data verification after you've
+done so. Once those fields are set, this pulls the column "Data sources" or whatever you may want
+to name it. It will then list all fields tied to the appropriate email on the csv file. 
+
+I've added a group by, so that the email will only be sent once, this is so that no one is being spammed.
+This will also find every data source or other data that was tied to the exact email and include it
+in one big email for the user. 
