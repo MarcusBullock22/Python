@@ -254,7 +254,7 @@ def main():
         if temp_data is None:
             st.error(f"Cannot proceed with analysis for {selected_item} due to data unavailability.")
             return
-        default_units = 1 if temp_data['price'].iloc[-1] > 100000 else buy_limit
+        default_units = min(buy_limit, 1) if temp_data['price'].iloc[-1] > 100000 else buy_limit
         
         # Input for number of units to trade
         trade_units = st.number_input(f"Number of units to trade (max {buy_limit}):", 
