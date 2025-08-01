@@ -1,1 +1,9 @@
+streamlit
+requests
+pandas
+numpy
 scikit-learn
+tensorflow
+matplotlib
+fuzzywuzzy
+python-Levenshtein
