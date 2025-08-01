@@ -177,7 +177,7 @@ def train_and_evaluate(item_id, item_name, buy_limit=1000, margin_threshold=3.0,
     
     # Default trade units: 10 for high-price items (>100,000 GP), else use buy limit
     if trade_units is None:
-        trade_units = 10 if last_price > 100000 else buy_limit
+        trade_units = 1 if last_price > 100000 else buy_limit
     
     # Calculate profit
     profit_per_unit, total_profit = calculate_profit(last_price, pred_price, trade_units)
