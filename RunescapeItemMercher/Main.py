@@ -246,25 +246,19 @@ def main():
     item_row = item_mapping[item_mapping['name'] == selected_item]
     if not item_row.empty:
         item_id = item_row['id'].iloc[0]
-        buy_limit = max(int(item_row.get('limit', 1000).iloc[0]), 1) 
+        buy_limit = item_row.get('limit', 1000).iloc[0]  # Default to 1000 if no limit
         st.write(f"Analyzing {selected_item} (ID: {item_id}, Buy Limit: {buy_limit})...")
         
         # Check data availability before setting default units
         temp_data = fetch_osrs_data(item_id, selected_item)
-        if temp_data['price'].iloc[-1] > 100000:
-            default_units = min(buy_limit, 1)
-        else:
-            default_units = buy_limit
+        if temp_data is None:
+            st.error(f"Cannot proceed with analysis for {selected_item} due to data unavailability.")
             return
-        default_units = min(default_units, buy_limit)
+        default_units = 1 if temp_data['price'].iloc[-1] > 100000 else buy_limit
         
         # Input for number of units to trade
-        ttrade_units = st.number_input(
-            f"Number of units to trade (max {buy_limit}):",
-            min_value=1,
-            max_value=buy_limit,
-            value=default_units
-        )
+        trade_units = st.number_input(f"Number of units to trade (max {buy_limit}):", 
+                                     min_value=1, max_value=int(buy_limit), value=int(default_units))
         
         # Run analysis
         fig, result = train_and_evaluate(item_id, selected_item, buy_limit, margin_threshold, trade_units)
