@@ -177,7 +177,7 @@ def train_and_evaluate(item_id, item_name, buy_limit=1000, margin_threshold=3.0,
     
     # Default trade units: 10 for high-price items (>100,000 GP), else use buy limit
     if trade_units is None:
-        trade_units = 10 if last_price > 100000 else buy_limit
+        trade_units = 1 if last_price > 100000 else buy_limit
     
     # Calculate profit
     profit_per_unit, total_profit = calculate_profit(last_price, pred_price, trade_units)
@@ -246,19 +246,25 @@ def main():
     item_row = item_mapping[item_mapping['name'] == selected_item]
     if not item_row.empty:
         item_id = item_row['id'].iloc[0]
-        buy_limit = item_row.get('limit', 1000).iloc[0]  # Default to 1000 if no limit
+        buy_limit = max(int(item_row.get('limit', 1000).iloc[0]), 1) 
         st.write(f"Analyzing {selected_item} (ID: {item_id}, Buy Limit: {buy_limit})...")
         
         # Check data availability before setting default units
         temp_data = fetch_osrs_data(item_id, selected_item)
-        if temp_data is None:
-            st.error(f"Cannot proceed with analysis for {selected_item} due to data unavailability.")
+        if temp_data['price'].iloc[-1] > 100000:
+            default_units = min(buy_limit, 1)
+        else:
+            default_units = buy_limit
             return
-        default_units = 10 if temp_data['price'].iloc[-1] > 100000 else buy_limit
+        default_units = min(default_units, buy_limit)
         
         # Input for number of units to trade
-        trade_units = st.number_input(f"Number of units to trade (max {buy_limit}):", 
-                                     min_value=1, max_value=int(buy_limit), value=int(default_units))
+        ttrade_units = st.number_input(
+            f"Number of units to trade (max {buy_limit}):",
+            min_value=1,
+            max_value=buy_limit,
+            value=default_units
+        )
         
         # Run analysis
         fig, result = train_and_evaluate(item_id, selected_item, buy_limit, margin_threshold, trade_units)
