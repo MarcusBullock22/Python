@@ -18,18 +18,18 @@ This portfolio contains end-to-end projects that demonstrate my ability to handl
 #Description: A real-time, voice-activated AI assistant that uses speech recognition, GPT-powered natural language processing, and text-to-speech for fully interactive, hands-free conversations.  
 #Tech Stack: Python, OpenAI API (GPT-3/4), Hugging Face Transformers (GPT-2), PyTorch, SpeechRecognition, pyttsx3, Google Web Speech API  
 
-#Project: RunescapeItemMercher  
+#Project: RunescapeItemMercher  (continued development)
 #Description:   
 #Tech Stack:   
 
-#Project: databricks_etl  
+#Project: databricks_etl 
 #Description: Ingested, transformed, and modeled data from multiple platforms into Delta Lake with partitioning and versioning.  
 #Tech Stack: Python, PySpark, Databricks, Delta Lake, SQL  
 
-#Project: nlp_data_catalog  
+#Project: nlp_data_catalog  (in progress)
 #Description: Built a distributed natural language search tool for dataset discovery, integrated with Delta tables.  
 #Tech Stack: Python, Spark, NLP, Flask, Delta Lake  
 
-#Project: multi_cloud_streaming  
+#Project: multi_cloud_streaming  (in progress)
 #Description: Created a real-time data streaming pipeline across AWS and Azure with automated deployment.  
 #Tech Stack: Python, Spark Structured Streaming, AWS, Azure, Kafka, CI/CD  
