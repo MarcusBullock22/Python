@@ -14,22 +14,22 @@ This portfolio contains end-to-end projects that demonstrate my ability to handl
 #Description: This project demonstrates how to integrate a cloud object storage system (Backblaze B2) with a real-time messaging platform (Discord), leveraging both APIs to deliver a lightweight media automation service.  
 #Tech Stack: Python, discord, b2sdk, re(regex), backblaze, os  
 
-# Project: Jarvis  
-# Description: A real-time, voice-activated AI assistant that uses speech recognition, GPT-powered natural language processing, and text-to-speech for fully interactive, hands-free conversations.  
-# Tech Stack: Python, OpenAI API (GPT-3/4), Hugging Face Transformers (GPT-2), PyTorch, SpeechRecognition, pyttsx3, Google Web Speech API  
+#Project: Jarvis  
+#Description: A real-time, voice-activated AI assistant that uses speech recognition, GPT-powered natural language processing, and text-to-speech for fully interactive, hands-free conversations.  
+#Tech Stack: Python, OpenAI API (GPT-3/4), Hugging Face Transformers (GPT-2), PyTorch, SpeechRecognition, pyttsx3, Google Web Speech API  
 
-# Project: RunescapeItemMercher  
-# Description:   
-# Tech Stack:   
+#Project: RunescapeItemMercher  
+#Description:   
+#Tech Stack:   
 
-# Project: databricks_etl  
-# Description: Ingested, transformed, and modeled data from multiple platforms into Delta Lake with partitioning and versioning.  
-# Tech Stack: Python, PySpark, Databricks, Delta Lake, SQL  
+#Project: databricks_etl  
+#Description: Ingested, transformed, and modeled data from multiple platforms into Delta Lake with partitioning and versioning.  
+#Tech Stack: Python, PySpark, Databricks, Delta Lake, SQL  
 
-# Project: nlp_data_catalog  
-# Description: Built a distributed natural language search tool for dataset discovery, integrated with Delta tables.  
-# Tech Stack: Python, Spark, NLP, Flask, Delta Lake  
+#Project: nlp_data_catalog  
+#Description: Built a distributed natural language search tool for dataset discovery, integrated with Delta tables.  
+#Tech Stack: Python, Spark, NLP, Flask, Delta Lake  
 
-# Project: multi_cloud_streaming  
-# Description: Created a real-time data streaming pipeline across AWS and Azure with automated deployment.  
-# Tech Stack: Python, Spark Structured Streaming, AWS, Azure, Kafka, CI/CD  
+#Project: multi_cloud_streaming  
+#Description: Created a real-time data streaming pipeline across AWS and Azure with automated deployment.  
+#Tech Stack: Python, Spark Structured Streaming, AWS, Azure, Kafka, CI/CD  
