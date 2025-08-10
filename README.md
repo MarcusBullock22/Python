@@ -6,13 +6,13 @@ This portfolio contains end-to-end projects that demonstrate my ability to handl
 
 ## Featured Projects
 
-# Project: Auto Emailer  
-# Description: Ingested, transformed, and modeled data from multiple platforms into Delta Lake with partitioning and versioning.  
-# Tech Stack: Python, pandas, pywin32, Microsoft Excel, Microsoft Outlook  
+#Project: Auto Emailer  
+#Description: Ingested, transformed, and modeled data from multiple platforms into Delta Lake with partitioning and versioning.  
+#Tech Stack: Python, pandas, pywin32, Microsoft Excel, Microsoft Outlook  
 
-# Project: CatBot  
-# Description: This project demonstrates how to integrate a cloud object storage system (Backblaze B2) with a real-time messaging platform (Discord), leveraging both APIs to deliver a lightweight media automation service.  
-# Tech Stack: Python, discord, b2sdk, re(regex), backblaze, os  
+#Project: CatBot  
+#Description: This project demonstrates how to integrate a cloud object storage system (Backblaze B2) with a real-time messaging platform (Discord), leveraging both APIs to deliver a lightweight media automation service.  
+#Tech Stack: Python, discord, b2sdk, re(regex), backblaze, os  
 
 # Project: Jarvis  
 # Description: A real-time, voice-activated AI assistant that uses speech recognition, GPT-powered natural language processing, and text-to-speech for fully interactive, hands-free conversations.  
