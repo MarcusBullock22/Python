@@ -1,12 +1,32 @@
-The purpose of this program was to solve a couple of issues:
-1. Find a solution within Python that will allow for auto emailing in a confined system space
-2. Remedy restricted access to outlook via signin
+# Auto Emailer
 
-To run this program, you must have outlook up. You will also need an excel file or whatever file/link you 
-may want to use. Verify an updated date column is also present for data verification after you've
-done so. Once those fields are set, this pulls the column "Data sources" or whatever you may want
-to name it. It will then list all fields tied to the appropriate email on the csv file. 
+Automates the process of retrieving data from multiple sources, generating personalized email content, and sending emails at scheduled intervals — streamlining communication and eliminating hours of manual work.
 
-I've added a group by, so that the email will only be sent once, this is so that no one is being spammed.
-This will also find every data source or other data that was tied to the exact email and include it
-in one big email for the user. 
+## Features
+
+- **Automated Data Retrieval**: Ingests and transforms data from multiple platforms including SharePoint, SQL, and external APIs.
+- **Dynamic Email Content**: Generates personalized messages based on real-time data.
+- **Scheduling & Triggers**: Runs on a set schedule or triggers based on new data availability.
+- **Customizable Templates**: Supports HTML and plain-text templates for professional formatting.
+- **Error Handling & Logging**: Keeps detailed logs for troubleshooting and compliance.
+
+## Tech Stack
+
+- **Languages**: Python
+- **Tools & Libraries**: Power Automate, Pandas, Requests, smtplib, Jinja2
+- **Data Sources**: SharePoint, SQL, APIs
+- **Deployment**: Runs as a scheduled process or serverless function
+
+## How It Works
+
+1. **Pull Data**: Connects to data sources, retrieves new entries, and cleans them.
+2. **Generate Emails**: Uses templates to insert relevant data dynamically.
+3. **Send Emails**: Sends messages via SMTP or external email APIs.
+4. **Log & Monitor**: Saves a detailed report of emails sent and any errors.
+
+## Potential Use Cases
+
+- Internal company updates
+- Automated reporting
+- Customer follow-ups
+- Event notifications
