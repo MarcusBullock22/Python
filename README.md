@@ -22,8 +22,8 @@ This portfolio contains end-to-end projects that demonstrate my ability to handl
 #Description:  A machine learning-powered Streamlit app that predicts Old School RuneScape (OSRS) item prices and recommends profitable flips, helping players maximize Grand Exchange merching opportunities.   
 #Tech Stack:  Python, Streamlit, TensorFlow/Keras, Pandas, NumPy, scikit-learn, Matplotlib, fuzzywuzzy, Requests    
 
-#Project: databricks_etl 
-#Description: Ingested, transformed, and modeled data from multiple platforms into Delta Lake with partitioning and versioning.  
+#Project: databricks_etl   
+#Description: Ingested, transformed, and modeled data from multiple platforms into Delta Lake with partitioning and versioning.    
 #Tech Stack: Python, PySpark, Databricks, Delta Lake, SQL  
 
 #Project: nlp_data_catalog  (in progress)  
