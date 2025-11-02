@@ -1,0 +1,12 @@
+{
+  "name": "Marcus Bullock, Senior Data Engineer",
+  "short_name": "Marcus Bullock",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0B1020",
+  "icons": [
+    { "src": "/favicon.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
