@@ -3,7 +3,7 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import { ArrowRight, Download, Github, Linkedin, Twitter, Mail, MapPin, Phone, Sparkles, ExternalLink, Briefcase, LibraryBig, Cpu, Trophy, ChevronDown, Star, Code2, Database, Rocket, Shield } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import emailjs from "@emailjs/browser";
-emailjs.init("hPP3NDq7tG9Lj_SV_"); 
+emailjs.init(""); 
 
 const profile = {
   name: "Marcus Bullock",
@@ -11,7 +11,7 @@ const profile = {
   tagline: "Building reliable data systems and applied AI for real missions in the DoD space.",
   location: "Fayetteville, NC · USA",
   email: "marcbullock22@gmail.com",
-  phone: "+1 (727) 364‑4288",
+  phone: "+1",
   resumeUrl: "#",
   socials: {
     github: "https://github.com/MarcusBullock22",
@@ -655,8 +655,8 @@ const sendEmail = async (e) => {
   try {
     await toast.promise(
       emailjs.send(
-        "service_p2w7beo",    // Service ID
-        "template_bzothgz",   // Template ID
+        "",    // Service ID
+        "",   // Template ID
         params                // Using emailjs.init({ publicKey }) elsewhere
       ),
       {
