@@ -3,7 +3,7 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import { ArrowRight, Download, Github, Linkedin, Twitter, Mail, MapPin, Phone, Sparkles, ExternalLink, Briefcase, LibraryBig, Cpu, Trophy, ChevronDown, Star, Code2, Database, Rocket, Shield } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import emailjs from "@emailjs/browser";
-emailjs.init(""); 
+emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY); 
 
 const profile = {
   name: "Marcus Bullock",
@@ -657,8 +657,8 @@ const sendEmail = async (e) => {
   try {
     await toast.promise(
       emailjs.send(
-        "",    // Service ID
-        "",   // Template ID
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,// Service ID
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,// Template ID
         params                // Using emailjs.init({ publicKey }) elsewhere
       ),
       {
