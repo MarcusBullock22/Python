@@ -12,7 +12,7 @@ const profile = {
   location: "Fayetteville, NC · USA",
   email: "marcbullock22@gmail.com",
   phone: "+1",
-  resumeUrl: "#",
+  resumeUrl: "/Marcus_Bullocks_Data_Engineer_Resume.docx",
   socials: {
     github: "https://github.com/MarcusBullock22",
     linkedin: "https://www.linkedin.com/in/marcusbullock12/",
@@ -34,6 +34,7 @@ const about = {
     "Operational analytics & KPI scorecards",
     "Power BI dashboards with DAX/RLS",
     "APIs, CI/CD, RBAC, governance",
+    "Full stack development (webapps and winapps)",
   ],
   fun: [
     "RuneScape grinder, project tinkerer",
@@ -150,34 +151,34 @@ function ProjectFilters({ value, onChange, groups }) {
 
 const projects = [
   {
-    name: "Defense AI Dashboard",
-    group: "AI", // ← add
-    desc: "Operational analytics for USASOC-style missions: KPIs, LLM briefings, and data-quality scorecards with RBAC and audit.",
+    name: "All Along the Jordans",
+    group: "Games", 
+    desc: "A 64 bit turnbased game built with adobe flash, featuring a unique story and funny animations. Project is currently being reworked in C# due to flash no longer being supported.",
     links: [
-      { label: "Case Study", href: "#defense-ai-dashboard", icon: <ExternalLink className="w-4 h-4" /> },
-      { label: "Repo", href: "https://github.com/MarcusBullock22/defense-ai-dashboard", icon: <Code2 className="w-4 h-4" /> },
+      { label: "Play Now (not yet available)", href: "", icon: <ExternalLink className="w-4 h-4" /> },
+      { label: "Repo", href: "https://github.com/MarcusBullock22/Game-Creations/tree/master/Final_game", icon: <Code2 className="w-4 h-4" /> },
     ],
-    stack: ["React", "FastAPI", "Azure", "Postgres", "LLMs", "RBAC"],
+    stack: ["Flash", "C#"],
   },
   {
     name: "RuneScape Item Mercher",
-    group: "Games",
+    group: "AI",
     desc: "Automates price checks and flipping strategies; passive in-game income with risk controls.",
     links: [
       { label: "Live Demo", href: "https://marcusbullock22-python-runescapeitemmerchermain-usrsts.streamlit.app/", icon: <ExternalLink className="w-4 h-4" /> },
-      { label: "Repo", href: "https://github.com/MarcusBullock22/Python", icon: <Code2 className="w-4 h-4" /> },
+      { label: "Repo", href: "https://github.com/MarcusBullock22/Python/tree/main/RunescapeItemMercher", icon: <Code2 className="w-4 h-4" /> },
     ],
     stack: ["Python", "Pandas", "Streamlit", "Requests"],
   },
   {
-    name: "Land Valuation (Power BI)",
-    group: "Dashboards",
-    desc: "Power BI solution for agricultural portfolio analysis with DAX simulations and row-level security.",
-    links: [
-      { label: "View Report", href: "https://app.powerbi.com/view?r=...", icon: <ExternalLink className="w-4 h-4" /> },
-    ],
-    stack: ["Power BI", "DAX", "Azure SQL", "ADF"],
-  },
+  name: "Scholarship Updater (AI Automation)",
+  group: "AI",
+  desc: "Automated scholarship discovery and tracking system that scrapes eligibility data, updates active opportunities, and uses an AI personality layer to generate tailored scholarship essays.",
+  links: [
+    { label: "Repo", href: "https://github.com/MarcusBullock22/Python/tree/main/ScholarshipApp", icon: <ExternalLink className="w-4 h-4" /> },
+  ],
+  stack: ["Python", "Web Scraping", "GPT-4", "Streamlit", "APIs"],
+ },
 ];
 
 
@@ -274,6 +275,7 @@ const Hero = () => (
         <div className="mt-8 flex flex-wrap gap-3">
           <a
             href={profile.resumeUrl}
+            download
             className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold shadow-lg hover:shadow-xl transition"
           >
             <Download className="w-4 h-4"/> Download Resume
