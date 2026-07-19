@@ -114,7 +114,7 @@ def validate_setup(
     if add_per_elimination < 1:
         errors.append("Numbers added after an elimination must be at least 1.")
     if money(entry_fee) <= 0:
-        errors.append("Entry fee must be greater than $0.00.")
+        errors.append("Entry fee must be greater than 0.00 Gil.")
     errors.extend(validate_percentages(player_percentage, house_percentage))
     return errors
 
@@ -155,7 +155,7 @@ def create_game(
     game.round_number = 1
     game.last_added_numbers = new_numbers
     game.log.append(
-        f"Game started with {len(game.players)} players at ${game.entry_fee:.2f} each. "
+        f"Game started with {len(game.players)} players at {game.entry_fee:.2f} Gil each. "
         f"Split: {game.player_percentage:.2f}% player / {game.house_percentage:.2f}% house."
     )
     game.log.append(f"Round 1 initial hot potato numbers: {format_numbers(new_numbers)}")
@@ -241,8 +241,8 @@ def determine_winner(game: GameState) -> Optional[str]:
         game.finished = True
         game.winner_name = active[0].name
         game.log.append(
-            f"{game.winner_name} won ${game.winner_payout:.2f} from a ${game.total_pot:.2f} pot. "
-            f"House receives ${game.house_payout:.2f}."
+            f"{game.winner_name} won {game.winner_payout:.2f} Gil from a {game.total_pot:.2f} Gil pot. "
+            f"House receives {game.house_payout:.2f} Gil."
         )
         return game.winner_name
     if len(active) == 0:
@@ -269,7 +269,7 @@ def update_settings(
     if add_per_elimination < 1:
         raise ValueError("Numbers added after an elimination must be at least 1.")
     if money(entry_fee) <= 0:
-        raise ValueError("Entry fee must be greater than $0.00.")
+        raise ValueError("Entry fee must be greater than 0.00 Gil.")
     percentage_errors = validate_percentages(player_percentage, house_percentage)
     if percentage_errors:
         raise ValueError(" ".join(percentage_errors))
@@ -290,7 +290,7 @@ def update_settings(
         "Game settings edited: "
         f"range 1-{old[0]} → 1-{game.max_number}, "
         f"add count {old[1]} → {game.add_per_elimination}, "
-        f"entry fee ${old[2]:.2f} → ${game.entry_fee:.2f}, "
+        f"entry fee {old[2]:.2f} → {game.entry_fee:.2f}, "
         f"split {old[3]:.2f}/{old[4]:.2f} → "
         f"{game.player_percentage:.2f}/{game.house_percentage:.2f}."
     )
