@@ -2,31 +2,48 @@
 
 A Streamlit app for managing a cumulative hot-potato elimination game.
 
-## Included rules and features
+## Included rules
 
 - Supports 2–25 players.
-- Configurable roll range from 1–999.
-- Unique initial numbers that remain active for the entire game.
-- Configurable new numbers after every elimination.
-- Fixed entry fee.
-- Configurable player and house percentages that must total 100%.
+- Uses a configurable roll range from 1–999.
+- Generates a configurable number of unique initial hot-potato numbers.
+- Retains every prior hot-potato number throughout the game.
+- Adds configurable new unique numbers after each elimination.
+- Uses a fixed entry fee for all players.
 - Eliminated players remain in the pot.
 - Connectivity dropouts and removed/disqualified players are removed from the pot.
-- Choose an outcome once, then click a player's name directly to apply it.
-- Automatic payout recalculation and winner declaration.
-- Copyable round announcements showing only newly generated numbers.
-- Full game log and downloadable JSON record.
-- In-game setting edits and reset confirmation warnings.
+- Automatically recalculates the total pot and 70% winner payout.
+- Maintains fixed player order in the player table.
+- Provides a copyable announcement containing only the newly generated numbers.
+- Keeps a complete game log.
+- Automatically declares the final active player the winner.
+- Allows in-game setting edits after a confirmation warning.
+- Exports the completed game record as JSON.
 
 ## Run locally
 
+1. Install Python 3.10 or newer.
+2. Open a terminal in this folder.
+3. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
+```
+
+4. Start the app:
+
+```bash
 streamlit run app.py
 ```
+
+Streamlit will open the app in your browser.
 
 ## Run tests
 
 ```bash
 python -m unittest test_game_logic.py
 ```
+
+## Important payout behavior
+
+An eliminated player's entry stays in the pot. A player marked as a connectivity dropout or removed/disqualified is removed from the pot, so the pot and winner payout recalculate immediately.
