@@ -137,11 +137,33 @@ if game is None:
             step=1.00,
             format="%.2f",
         )
+        split_left, split_right = st.columns(2)
+        with split_left:
+            player_percentage = st.number_input(
+                "Player percentage",
+                min_value=0.0,
+                max_value=100.0,
+                value=70.0,
+                step=1.0,
+                format="%.2f",
+            )
+        with split_right:
+            house_percentage = st.number_input(
+                "House percentage",
+                min_value=0.0,
+                max_value=100.0,
+                value=30.0,
+                step=1.0,
+                format="%.2f",
+            )
 
         preview_total = Decimal(str(entry_fee)) * player_count
+        preview_player = preview_total * Decimal(str(player_percentage)) / Decimal("100")
+        preview_house = preview_total * Decimal(str(house_percentage)) / Decimal("100")
         st.info(
-            f"Starting pot: **${preview_total:.2f}**  \n"
-            f"Potential winner payout: **${preview_total * Decimal('0.70'):.2f}**"
+            f"Starting pot: **{preview_total:.2f}**  \n"
+            f"Player payout: **{preview_player:.2f}**  \n"
+            f"House payout: **{preview_house:.2f}**"
         )
 
         if st.button("Start game", type="primary", use_container_width=True):
@@ -151,6 +173,8 @@ if game is None:
                 int(initial_count),
                 int(add_count),
                 entry_fee,
+                player_percentage,
+                house_percentage,
             )
             if errors:
                 for error in errors:
@@ -162,6 +186,8 @@ if game is None:
                     int(initial_count),
                     int(add_count),
                     entry_fee,
+                    player_percentage,
+                    house_percentage,
                 )
                 st.rerun()
 
@@ -173,7 +199,7 @@ else:
     metric_cols[1].metric("Round", game.round_number)
     metric_cols[2].metric("Active numbers", len(game.active_numbers))
     metric_cols[3].metric("Total pot", f"${game.total_pot:.2f}")
-    metric_cols[4].metric("Winner payout", f"${game.winner_payout:.2f}")
+    metric_cols[4].metric("Player payout", f"{game.winner_payout:.2f}")
 
     if game.finished:
         if game.winner_name:
@@ -181,8 +207,8 @@ else:
                 f"""
                 <div class="big-winner">
                     🏆 Winner: {game.winner_name}<br>
-                    Payout: ${game.winner_payout:.2f}<br>
-                    Total pot: ${game.total_pot:.2f}
+                    Player payout: {game.winner_payout:.2f}<br>
+                    Total pot: {game.total_pot:.2f}
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -213,55 +239,64 @@ else:
             )
 
         st.subheader("Players")
-        rows = []
-        for position, player in enumerate(game.players, start=1):
-            rows.append(
-                {
-                    "Order": position,
-                    "Player": player.name,
-                    "Status": player.status,
-                    "Entry": f"${game.entry_fee:.2f}"
-                    if player.status not in (DROPPED, REMOVED)
-                    else "$0.00",
-                    "Elimination order": player.elimination_order or "",
-                }
-            )
-        st.dataframe(rows, use_container_width=True, hide_index=True)
-
         if not game.finished:
-            st.subheader("Record player outcome")
-            active_names = [p.name for p in game.active_players]
-            selected_name = st.selectbox("Player", active_names)
+            st.caption("Choose an outcome, then click an active player's name.")
             outcome = st.radio(
-                "Outcome",
+                "Action to apply",
                 [ELIMINATED, DROPPED, REMOVED],
                 horizontal=True,
                 help=(
-                    "An eliminated player's entry stays in the pot. "
-                    "A connectivity dropout or removed/disqualified player is removed from the pot."
+                    "Eliminated entries remain in the pot. Connectivity dropouts and "
+                    "removed/disqualified players are removed from the pot."
                 ),
             )
-            action_text = {
-                ELIMINATED: "Eliminate player and add numbers",
-                DROPPED: "Mark connectivity dropout",
-                REMOVED: "Remove / disqualify player",
-            }[outcome]
 
-            if st.button(action_text, type="primary", use_container_width=True):
-                try:
-                    mark_player(game, selected_name, outcome)
-                    st.session_state.game = game
-                    st.rerun()
-                except ValueError as exc:
-                    st.error(str(exc))
+        header = st.columns([0.55, 2.2, 1.4, 1.0, 1.1])
+        for col, label in zip(
+            header,
+            ["Order", "Player", "Status", "Entry", "Elim. order"],
+        ):
+            col.markdown(f"**{label}**")
+
+        for position, player in enumerate(game.players, start=1):
+            row = st.columns([0.55, 2.2, 1.4, 1.0, 1.1])
+            row[0].write(position)
+            if player.status == ACTIVE and not game.finished:
+                clicked = row[1].button(
+                    player.name,
+                    key=f"player_action_{position}_{game.round_number}_{player.status}",
+                    use_container_width=True,
+                )
+                if clicked:
+                    try:
+                        mark_player(game, player.name, outcome)
+                        st.session_state.game = game
+                        st.rerun()
+                    except ValueError as exc:
+                        st.error(str(exc))
+            else:
+                row[1].write(player.name)
+            row[2].write(player.status)
+            row[3].write(
+                f"{game.entry_fee:.2f}"
+                if player.status not in (DROPPED, REMOVED)
+                else "0.00"
+            )
+            row[4].write(player.elimination_order or "")
 
     with sidebar:
         st.subheader("Pot details")
         st.write(f"Fixed entry fee: **${game.entry_fee:.2f}**")
         st.write(f"Entries remaining in pot: **{game.paid_player_count}**")
         st.write(f"Total pot: **${game.total_pot:.2f}**")
-        st.write(f"Winner receives 70%: **${game.winner_payout:.2f}**")
-        st.write(f"Remaining 30%: **${game.remainder:.2f}**")
+        st.write(
+            f"Player receives {game.player_percentage:.2f}%: **{game.winner_payout:.2f}**"
+        )
+        st.write(
+            f"House receives {game.house_percentage:.2f}%: **{game.house_payout:.2f}**"
+        )
+        if game.remainder:
+            st.caption(f"Rounding remainder: {game.remainder:.2f}")
 
         st.divider()
         st.subheader("Game controls")
@@ -296,6 +331,26 @@ else:
                 format="%.2f",
                 key="edit_fee",
             )
+            edit_player_percentage = st.number_input(
+                "New player percentage",
+                min_value=0.0,
+                max_value=100.0,
+                value=float(game.player_percentage),
+                step=1.0,
+                format="%.2f",
+                key="edit_player_percentage",
+            )
+            edit_house_percentage = st.number_input(
+                "New house percentage",
+                min_value=0.0,
+                max_value=100.0,
+                value=float(game.house_percentage),
+                step=1.0,
+                format="%.2f",
+                key="edit_house_percentage",
+            )
+            if round(edit_player_percentage + edit_house_percentage, 2) != 100.00:
+                st.error("Player and house percentages must total exactly 100%.")
             confirm = st.checkbox(
                 "I understand this will update the active game.",
                 key="edit_confirm_checkbox",
@@ -313,6 +368,8 @@ else:
                             int(edit_max),
                             int(edit_add),
                             edit_fee,
+                            edit_player_percentage,
+                            edit_house_percentage,
                         )
                         st.session_state.game = game
                         st.session_state.confirm_edit = False
@@ -357,6 +414,8 @@ else:
             "initial_count": game.initial_count,
             "add_per_elimination": game.add_per_elimination,
             "entry_fee": str(game.entry_fee),
+            "player_percentage": str(game.player_percentage),
+            "house_percentage": str(game.house_percentage),
         },
         "players": [
             {
@@ -370,6 +429,7 @@ else:
         "winner": game.winner_name,
         "total_pot": str(game.total_pot),
         "winner_payout": str(game.winner_payout),
+        "house_payout": str(game.house_payout),
         "log": game.log,
     }
     st.download_button(
