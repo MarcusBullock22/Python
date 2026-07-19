@@ -12,6 +12,7 @@ from game_logic import (
     REMOVED,
     GameState,
     announcement,
+    check_roll,
     create_game,
     format_numbers,
     mark_player,
@@ -62,6 +63,8 @@ def initialize_setup() -> None:
     st.session_state.setdefault("setup_names", [f"Player {i}" for i in range(1, 9)])
     st.session_state.setdefault("confirm_edit", False)
     st.session_state.setdefault("confirm_reset", False)
+    st.session_state.setdefault("selected_player", None)
+    st.session_state.setdefault("last_roll_result", None)
 
 
 initialize_setup()
@@ -137,12 +140,26 @@ if game is None:
             step=1.00,
             format="%.2f",
         )
+        pct_col1, pct_col2 = st.columns(2)
+        with pct_col1:
+            player_percentage = st.number_input(
+                "Player percentage", min_value=0.0, max_value=100.0, value=70.0, step=1.0
+            )
+        with pct_col2:
+            house_percentage = st.number_input(
+                "House percentage", min_value=0.0, max_value=100.0, value=30.0, step=1.0
+            )
 
         preview_total = Decimal(str(entry_fee)) * player_count
+        preview_player = preview_total * Decimal(str(player_percentage)) / Decimal("100")
+        preview_house = preview_total * Decimal(str(house_percentage)) / Decimal("100")
         st.info(
             f"Starting pot: **${preview_total:.2f}**  \n"
-            f"Potential winner payout: **${preview_total * Decimal('0.70'):.2f}**"
+            f"Player payout: **${preview_player:.2f}**  \n"
+            f"House payout: **${preview_house:.2f}**"
         )
+        if round(player_percentage + house_percentage, 2) != 100.0:
+            st.warning("Player and house percentages must total 100%.")
 
         if st.button("Start game", type="primary", use_container_width=True):
             errors = validate_setup(
@@ -151,6 +168,8 @@ if game is None:
                 int(initial_count),
                 int(add_count),
                 entry_fee,
+                player_percentage,
+                house_percentage,
             )
             if errors:
                 for error in errors:
@@ -162,6 +181,8 @@ if game is None:
                     int(initial_count),
                     int(add_count),
                     entry_fee,
+                    player_percentage,
+                    house_percentage,
                 )
                 st.rerun()
 
@@ -173,7 +194,7 @@ else:
     metric_cols[1].metric("Round", game.round_number)
     metric_cols[2].metric("Active numbers", len(game.active_numbers))
     metric_cols[3].metric("Total pot", f"${game.total_pot:.2f}")
-    metric_cols[4].metric("Winner payout", f"${game.winner_payout:.2f}")
+    metric_cols[4].metric("Player payout", f"${game.winner_payout:.2f}")
 
     if game.finished:
         if game.winner_name:
@@ -226,42 +247,101 @@ else:
                     "Elimination order": player.elimination_order or "",
                 }
             )
-        st.dataframe(rows, use_container_width=True, hide_index=True)
+
+        player_table = st.dataframe(
+            rows,
+            use_container_width=True,
+            hide_index=True,
+            on_select="rerun",
+            selection_mode="single-row",
+            key="player_table",
+        )
+
+        # Clicking a row is an alternate way to choose the same player shown in the dropdown.
+        selected_rows = player_table.selection.rows
+        if selected_rows:
+            clicked_player = game.players[selected_rows[0]]
+            if clicked_player.status == ACTIVE:
+                st.session_state.selected_player = clicked_player.name
 
         if not game.finished:
             st.subheader("Record player outcome")
             active_names = [p.name for p in game.active_players]
-            selected_name = st.selectbox("Player", active_names)
+            if st.session_state.selected_player not in active_names:
+                st.session_state.selected_player = active_names[0]
+
+            selected_name = st.selectbox(
+                "Player (choose here or click their row above)",
+                active_names,
+                index=active_names.index(st.session_state.selected_player),
+            )
+            st.session_state.selected_player = selected_name
+
             outcome = st.radio(
                 "Outcome",
                 [ELIMINATED, DROPPED, REMOVED],
                 horizontal=True,
                 help=(
-                    "An eliminated player's entry stays in the pot. "
-                    "A connectivity dropout or removed/disqualified player is removed from the pot."
+                    "For elimination, enter the player's roll and the app will verify it. "
+                    "Dropouts and removed/disqualified players do not need a roll."
                 ),
             )
-            action_text = {
-                ELIMINATED: "Eliminate player and add numbers",
-                DROPPED: "Mark connectivity dropout",
-                REMOVED: "Remove / disqualify player",
-            }[outcome]
 
-            if st.button(action_text, type="primary", use_container_width=True):
-                try:
-                    mark_player(game, selected_name, outcome)
-                    st.session_state.game = game
-                    st.rerun()
-                except ValueError as exc:
-                    st.error(str(exc))
+            if outcome == ELIMINATED:
+                roll = st.number_input(
+                    "Player roll",
+                    min_value=1,
+                    max_value=game.max_number,
+                    value=1,
+                    step=1,
+                )
+                if st.button("Check roll", type="primary", use_container_width=True):
+                    try:
+                        is_hot = check_roll(game, selected_name, int(roll))
+                        if is_hot:
+                            mark_player(game, selected_name, ELIMINATED)
+                            st.session_state.last_roll_result = (
+                                "error",
+                                f"💥 {selected_name} rolled {int(roll)} and was eliminated.",
+                            )
+                        else:
+                            st.session_state.last_roll_result = (
+                                "success",
+                                f"✅ {selected_name} rolled {int(roll)} and is safe.",
+                            )
+                        st.session_state.game = game
+                        st.rerun()
+                    except ValueError as exc:
+                        st.error(str(exc))
+            else:
+                action_text = {
+                    DROPPED: "Mark connectivity dropout",
+                    REMOVED: "Remove / disqualify player",
+                }[outcome]
+                if st.button(action_text, type="primary", use_container_width=True):
+                    try:
+                        mark_player(game, selected_name, outcome)
+                        st.session_state.game = game
+                        st.session_state.last_roll_result = None
+                        st.rerun()
+                    except ValueError as exc:
+                        st.error(str(exc))
+
+            if st.session_state.last_roll_result:
+                result_type, result_message = st.session_state.last_roll_result
+                getattr(st, result_type)(result_message)
 
     with sidebar:
         st.subheader("Pot details")
         st.write(f"Fixed entry fee: **${game.entry_fee:.2f}**")
         st.write(f"Entries remaining in pot: **{game.paid_player_count}**")
         st.write(f"Total pot: **${game.total_pot:.2f}**")
-        st.write(f"Winner receives 70%: **${game.winner_payout:.2f}**")
-        st.write(f"Remaining 30%: **${game.remainder:.2f}**")
+        st.write(
+            f"Player receives {game.player_percentage:.2f}%: **${game.winner_payout:.2f}**"
+        )
+        st.write(
+            f"House receives {game.house_percentage:.2f}%: **${game.house_payout:.2f}**"
+        )
 
         st.divider()
         st.subheader("Game controls")
@@ -296,6 +376,24 @@ else:
                 format="%.2f",
                 key="edit_fee",
             )
+            edit_player_pct = st.number_input(
+                "New player percentage",
+                min_value=0.0,
+                max_value=100.0,
+                value=float(game.player_percentage),
+                step=1.0,
+                key="edit_player_pct",
+            )
+            edit_house_pct = st.number_input(
+                "New house percentage",
+                min_value=0.0,
+                max_value=100.0,
+                value=float(game.house_percentage),
+                step=1.0,
+                key="edit_house_pct",
+            )
+            if round(edit_player_pct + edit_house_pct, 2) != 100.0:
+                st.warning("Player and house percentages must total 100%.")
             confirm = st.checkbox(
                 "I understand this will update the active game.",
                 key="edit_confirm_checkbox",
@@ -313,6 +411,8 @@ else:
                             int(edit_max),
                             int(edit_add),
                             edit_fee,
+                            edit_player_pct,
+                            edit_house_pct,
                         )
                         st.session_state.game = game
                         st.session_state.confirm_edit = False
@@ -357,6 +457,8 @@ else:
             "initial_count": game.initial_count,
             "add_per_elimination": game.add_per_elimination,
             "entry_fee": str(game.entry_fee),
+            "player_percentage": str(game.player_percentage),
+            "house_percentage": str(game.house_percentage),
         },
         "players": [
             {
