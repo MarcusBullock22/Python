@@ -657,8 +657,8 @@ const sendEmail = async (e) => {
   try {
     await toast.promise(
       emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,// Service ID
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,// Template ID
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,// Service ID
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,// Template ID
         params                // Using emailjs.init({ publicKey }) elsewhere
       ),
       {
