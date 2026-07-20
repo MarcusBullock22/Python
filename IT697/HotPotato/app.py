@@ -154,9 +154,9 @@ if game is None:
         preview_player = preview_total * Decimal(str(player_percentage)) / Decimal("100")
         preview_house = preview_total * Decimal(str(house_percentage)) / Decimal("100")
         st.info(
-            f"Starting pot: **${preview_total:.2f}**  \n"
-            f"Player payout: **${preview_player:.2f}**  \n"
-            f"House payout: **${preview_house:.2f}**"
+            f"Starting pot: **{preview_total:.2f}**  \n"
+            f"Player payout: **{preview_player:.2f}**  \n"
+            f"House payout: **{preview_house:.2f}**"
         )
         if round(player_percentage + house_percentage, 2) != 100.0:
             st.warning("Player and house percentages must total 100%.")
@@ -193,8 +193,8 @@ else:
     metric_cols[0].metric("Active players", active_count)
     metric_cols[1].metric("Round", game.round_number)
     metric_cols[2].metric("Active numbers", len(game.active_numbers))
-    metric_cols[3].metric("Total pot", f"${game.total_pot:.2f}")
-    metric_cols[4].metric("Player payout", f"${game.winner_payout:.2f}")
+    metric_cols[3].metric("Total pot", f"{game.total_pot:.2f} Gil")
+    metric_cols[4].metric("Player payout", f"{game.winner_payout:.2f} Gil")
 
     if game.finished:
         if game.winner_name:
@@ -202,8 +202,8 @@ else:
                 f"""
                 <div class="big-winner">
                     🏆 Winner: {game.winner_name}<br>
-                    Payout: ${game.winner_payout:.2f}<br>
-                    Total pot: ${game.total_pot:.2f}
+                    Payout: {game.winner_payout:.2f} Gil<br>
+                    Total pot: {game.total_pot:.2f} Gil
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -241,7 +241,7 @@ else:
                     "Order": position,
                     "Player": player.name,
                     "Status": player.status,
-                    "Entry": f"${game.entry_fee:.2f}"
+                    "Entry": f"{game.entry_fee:.2f} Gil"
                     if player.status not in (DROPPED, REMOVED)
                     else "$0.00",
                     "Elimination order": player.elimination_order or "",
@@ -333,14 +333,14 @@ else:
 
     with sidebar:
         st.subheader("Pot details")
-        st.write(f"Fixed entry fee: **${game.entry_fee:.2f}**")
+        st.write(f"Fixed entry fee: **{game.entry_fee:.2f}** Gil")
         st.write(f"Entries remaining in pot: **{game.paid_player_count}**")
-        st.write(f"Total pot: **${game.total_pot:.2f}**")
+        st.write(f"Total pot: **{game.total_pot:.2f}** Gil")
         st.write(
-            f"Player receives {game.player_percentage:.2f}%: **${game.winner_payout:.2f}**"
+            f"Player receives {game.player_percentage:.2f}%: **{game.winner_payout:.2f}** Gil"
         )
         st.write(
-            f"House receives {game.house_percentage:.2f}%: **${game.house_payout:.2f}**"
+            f"House receives {game.house_percentage:.2f}%: **{game.house_payout:.2f}** Gil"
         )
 
         st.divider()
