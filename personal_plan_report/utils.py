@@ -1,12 +1,10 @@
 import streamlit as st
 import pandas as pd
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
-
-SHEET_ID = os.environ.get("GOOGLE_SHEET_ID")
-GID = os.environ.get("GOOGLE_SHEET_GID")
+# Prefer Streamlit secrets (Cloud), fall back to env vars (local)
+SHEET_ID = st.secrets.get("GOOGLE_SHEET_ID") or os.environ.get("GOOGLE_SHEET_ID")
+GID = st.secrets.get("GOOGLE_SHEET_GID") or os.environ.get("GOOGLE_SHEET_GID")
 CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={GID}" if SHEET_ID and GID else None
 
 @st.cache_data(ttl=60)
